@@ -26,9 +26,7 @@ import sys
 import meshio
 
 
-# Control Setting
-
-x_center,y_center = 128., 79.
+x_center,y_center = 138., 59.
 
 x_hxk, y_hxk = x_center,y_center
 x_ldh, y_ldh = x_center,y_center
@@ -48,6 +46,7 @@ msh = meshio.read("Astrocyte_mesh2D.msh")
 meshio.write("mesh.xml",msh)
 xml_file = Mesh("mesh.xml")
 mesh = Mesh(xml_file)
+
 
 ## Create mesh
 # N = 150
@@ -106,6 +105,10 @@ sigma = 20.0
 g_hxk = Expression("1./(pi*2*sigma*sigma) * exp(-((x[0]-x0)*(x[0]-x0)+(x[1]-y0)*(x[1]-y0))/(2*sigma*sigma))",
                    x0=x_hxk, y0=y_hxk, sigma=sigma, degree=2)
 
+g = interpolate(g_hxk, V)
+
+
+File("gaussian.pvd") << g
 
 # Define the Gaussian function indicating where PYRK reaction take place
 g_pyrk = Expression("1. /(pi*2*sigma*sigma) * exp(-((x[0]-x0)*(x[0]-x0)+(x[1]-y0)*(x[1]-y0))/(2*sigma*sigma))",
@@ -253,14 +256,17 @@ for n in range(num_step):
 
     list_f.append(assemble(_f * dx)/area)
 
-    if n in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,30,40,50,100,200,400,600,800,1000]:
+    saven= list(range(0,1001,10))
+    saven[0]=1
+    #if n in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,30,40,50,100,200,400,600,800,1000]:
+    if n in saven:
         #Create VTK files for visualization output
-        vtkfile_glc = File('results_1a_Circle70_Center/glc/glc_2D_%sof1000s.pvd' % n)
-        vtkfile_atp = File('results_1a_Circle70_Center/atp/atp_2D_%sof1000s.pvd' % n)
-        vtkfile_adp = File('results_1a_Circle70_Center/adp/adp_2D_%sof1000s.pvd' % n)
-        vtkfile_gly = File('results_1a_Circle70_Center/gly/gly_2D_%sof1000s.pvd' % n)
-        vtkfile_pyr = File('results_1a_Circle70_Center/pyr/pyr_2D_%sof1000s.pvd' % n)
-        vtkfile_lac = File('results_1a_Circle70_Center/lac/lac_2D_%sof1000s.pvd' % n)
+        vtkfile_glc = File('Real2D/glc/glc_2D_%sof1000s.pvd' % n)
+        vtkfile_atp = File('Real2D/atp/atp_2D_%sof1000s.pvd' % n)
+        vtkfile_adp = File('Real2D/adp/adp_2D_%sof1000s.pvd' % n)
+        vtkfile_gly = File('Real2D/gly/gly_2D_%sof1000s.pvd' % n)
+        vtkfile_pyr = File('Real2D/pyr/pyr_2D_%sof1000s.pvd' % n)
+        vtkfile_lac = File('Real2D/lac/lac_2D_%sof1000s.pvd' % n)
         
         vtkfile_glc << (_a, t[0])
         vtkfile_atp << (_b, t[0])
