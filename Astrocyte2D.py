@@ -26,8 +26,8 @@ import sys
 import meshio
 
 
+#x_center,y_center = 138., 59.
 x_center,y_center = 138., 59.
-
 x_hxk, y_hxk = x_center,y_center
 x_ldh, y_ldh = x_center,y_center
 x_mito, y_mito = x_center,y_center
@@ -105,10 +105,10 @@ sigma = 20.0
 g_hxk = Expression("1./(pi*2*sigma*sigma) * exp(-((x[0]-x0)*(x[0]-x0)+(x[1]-y0)*(x[1]-y0))/(2*sigma*sigma))",
                    x0=x_hxk, y0=y_hxk, sigma=sigma, degree=2)
 
-g = interpolate(g_hxk, V)
+#g = interpolate(g_hxk, V)
 
 
-File("gaussian.pvd") << g
+#File("gaussian.pvd") << g
 
 # Define the Gaussian function indicating where PYRK reaction take place
 g_pyrk = Expression("1. /(pi*2*sigma*sigma) * exp(-((x[0]-x0)*(x[0]-x0)+(x[1]-y0)*(x[1]-y0))/(2*sigma*sigma))",
